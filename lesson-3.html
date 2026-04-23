@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Урок 3 — Хеш-функция</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <h1>Урок 3: хеш — цифровой отпечаток</h1>
+        <p class="subtitle">Почему подпись подписывает не весь текст, а хеш.</p>
+        <nav class="top-nav">
+          <a href="./index.html">Главная</a>
+          <a href="./lesson-1.html">Урок 1</a>
+          <a href="./lesson-2.html">Урок 2</a>
+          <a href="./lesson-3.html">Урок 3</a>
+          <a href="./lesson-4.html">Урок 4</a>
+          <a href="./lesson-5.html">Урок 5</a>
+          <a href="./lab.html">Лаборатория</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Что такое хеш</h2>
+        <p>
+          Хеш — это короткая строка, которую считают из твоего сообщения. Это как
+          «отпечаток пальца» текста.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Главная формула</h2>
+        <div class="formula">h = H(m)</div>
+        <div class="explain">
+          Где <code>m</code> — сообщение, <code>H</code> — хеш-функция (например,
+          SHA-256), <code>h</code> — отпечаток.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Свойства хеша</h2>
+        <ul>
+          <li>Изменишь 1 символ — хеш станет совсем другим.</li>
+          <li>По хешу нельзя легко восстановить исходный текст.</li>
+          <li>Хеш всегда фиксированной длины.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Почему это нужно для подписи</h2>
+        <p>
+          Подписывать маленький хеш быстрее, чем огромный файл. И это надежно:
+          изменится файл — изменится хеш, подпись больше не пройдет.
+        </p>
+      </section>
+
+      <section class="card lesson-nav">
+        <a href="./lesson-2.html">← Урок 2</a>
+        <a href="./lesson-4.html">Урок 4: Полная схема →</a>
+      </section>
+    </main>
+  </body>
+</html>

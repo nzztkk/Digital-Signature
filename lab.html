@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лаборатория — цифровая подпись</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <h1>Лаборатория: подпись своими руками</h1>
+        <p class="subtitle">Здесь теория превращается в практику.</p>
+        <nav class="top-nav">
+          <a href="./index.html">Главная</a>
+          <a href="./lesson-1.html">Урок 1</a>
+          <a href="./lesson-2.html">Урок 2</a>
+          <a href="./lesson-3.html">Урок 3</a>
+          <a href="./lesson-4.html">Урок 4</a>
+          <a href="./lesson-5.html">Урок 5</a>
+          <a href="./lab.html">Лаборатория</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Инструкция</h2>
+        <ol>
+          <li>Нажми «Сгенерировать ключи».</li>
+          <li>Введи сообщение и нажми «Подписать сообщение».</li>
+          <li>Нажми «Проверить подпись» — должно быть «верна».</li>
+          <li>Нажми «Изменить сообщение», а потом снова проверь подпись.</li>
+        </ol>
+      </section>
+
+      <section class="card lab">
+        <h2>Практика</h2>
+        <div class="controls">
+          <button id="generateKeysBtn">1) Сгенерировать ключи</button>
+          <button id="signBtn" disabled>2) Подписать сообщение</button>
+          <button id="verifyBtn" disabled>3) Проверить подпись</button>
+          <button id="tamperBtn" disabled>Изменить сообщение (атака)</button>
+          <button id="resetBtn">Сбросить</button>
+        </div>
+
+        <label for="messageInput">Твое сообщение:</label>
+        <textarea id="messageInput" rows="5">
+Привет! Это мое важное сообщение.
+        </textarea>
+
+        <div class="output-grid">
+          <div>
+            <h3>Хеш сообщения (SHA-256)</h3>
+            <pre id="hashOutput">Пока не вычислен</pre>
+          </div>
+          <div>
+            <h3>Подпись (Base64)</h3>
+            <pre id="signatureOutput">Пока не создана</pre>
+          </div>
+          <div>
+            <h3>Публичный ключ (JWK)</h3>
+            <pre id="publicKeyOutput">Пока не создан</pre>
+          </div>
+          <div>
+            <h3>Статус проверки</h3>
+            <p id="verifyStatus" class="status neutral">Ожидание...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card lesson-nav">
+        <a href="./lesson-5.html">← Урок 5</a>
+        <a href="./index.html">На главную →</a>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

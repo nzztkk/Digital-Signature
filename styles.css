@@ -179,3 +179,56 @@ dd {
   padding-bottom: 32px;
   color: var(--muted);
 }
+
+.top-nav {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.top-nav a {
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 0.92rem;
+}
+
+.top-nav a:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.lesson-nav a {
+  text-decoration: none;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.formula {
+  background: #0b1020;
+  color: #dbeafe;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+.explain {
+  border-left: 4px solid #93c5fd;
+  background: #eff6ff;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.roadmap li {
+  margin-bottom: 8px;
+}

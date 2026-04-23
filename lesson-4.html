@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Урок 4 — Полная схема и формулы</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <h1>Урок 4: полная схема подписи</h1>
+        <p class="subtitle">От ключей до проверки, уже с формулами.</p>
+        <nav class="top-nav">
+          <a href="./index.html">Главная</a>
+          <a href="./lesson-1.html">Урок 1</a>
+          <a href="./lesson-2.html">Урок 2</a>
+          <a href="./lesson-3.html">Урок 3</a>
+          <a href="./lesson-4.html">Урок 4</a>
+          <a href="./lesson-5.html">Урок 5</a>
+          <a href="./lab.html">Лаборатория</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Шаг 1. Генерация ключей</h2>
+        <div class="formula">(pk, sk) <- KeyGen()</div>
+        <div class="explain">
+          <code>pk</code> — public key (публичный), <code>sk</code> — secret key
+          (приватный).
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Шаг 2. Считаем хеш сообщения</h2>
+        <div class="formula">h = H(m)</div>
+        <div class="explain">
+          <code>m</code> — сообщение, <code>h</code> — короткий отпечаток этого
+          сообщения.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Шаг 3. Создаем подпись</h2>
+        <div class="formula">s = Sign(sk, h)</div>
+        <div class="explain">
+          Приватный ключ «привязывает» подпись к хешу. Без приватного ключа создать
+          такую же подпись нельзя.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Шаг 4. Проверяем подпись</h2>
+        <div class="formula">valid = Verify(pk, h, s)</div>
+        <div class="explain">
+          Если результат true (истина), значит подпись настоящая и текст не
+          изменился.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Немного про RSA (упрощенно)</h2>
+        <div class="formula">n = p * q</div>
+        <div class="formula">e * d mod phi(n) = 1</div>
+        <div class="formula">s = h^d mod n, проверка: h ?= s^e mod n</div>
+        <div class="explain">
+          Это уже взрослая математика. Тебе важно запомнить идею: один ключ
+          подписывает, второй проверяет.
+        </div>
+      </section>
+
+      <section class="card lesson-nav">
+        <a href="./lesson-3.html">← Урок 3</a>
+        <a href="./lesson-5.html">Урок 5: Безопасность →</a>
+      </section>
+    </main>
+  </body>
+</html>
