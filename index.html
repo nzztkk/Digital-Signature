@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Цифровая подпись — пошаговый тренажер</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <h1>Цифровая подпись простыми словами</h1>
+        <p class="subtitle">
+          Пошаговый интерактивный урок: от идеи до настоящей подписи в браузере.
+        </p>
+        <p class="badge">Подходит даже для 6 класса</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Зачем это нужно?</h2>
+        <p>
+          Представь, что ты отправляешь важное письмо. Нужно доказать две вещи:
+        </p>
+        <ol>
+          <li><strong>Кто отправил</strong> письмо (это точно ты).</li>
+          <li><strong>Что письмо не меняли</strong> по дороге.</li>
+        </ol>
+        <p>
+          Для этого и существует цифровая подпись. Она работает как очень умная
+          «печать», которую нельзя подделать обычным способом.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Главные герои истории</h2>
+        <ul>
+          <li><strong>Приватный ключ</strong> — секретный ключ. Знаешь только ты.</li>
+          <li>
+            <strong>Публичный ключ</strong> — открытый ключ. Его можно раздать всем.
+          </li>
+          <li><strong>Хеш</strong> — короткий «отпечаток» текста.</li>
+          <li>
+            <strong>Подпись</strong> — шифрованный отпечаток, созданный приватным ключом.
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Как это работает по шагам</h2>
+        <div class="steps">
+          <article class="step">
+            <h3>Шаг 1. Создаем ключи</h3>
+            <p>Браузер сделает пару ключей: приватный и публичный.</p>
+          </article>
+          <article class="step">
+            <h3>Шаг 2. Пишем сообщение</h3>
+            <p>Ты вводишь текст, который хочешь подписать.</p>
+          </article>
+          <article class="step">
+            <h3>Шаг 3. Делаем хеш</h3>
+            <p>
+              Из текста вычисляется короткий отпечаток. Если изменить хотя бы 1 букву,
+              отпечаток станет другим.
+            </p>
+          </article>
+          <article class="step">
+            <h3>Шаг 4. Подписываем</h3>
+            <p>Отпечаток подписывается приватным ключом.</p>
+          </article>
+          <article class="step">
+            <h3>Шаг 5. Проверяем</h3>
+            <p>
+              Публичный ключ проверяет подпись. Если все честно — подпись
+              действительна.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card lab">
+        <h2>Лаборатория: попробуй сам</h2>
+
+        <div class="controls">
+          <button id="generateKeysBtn">1) Сгенерировать ключи</button>
+          <button id="signBtn" disabled>2) Подписать сообщение</button>
+          <button id="verifyBtn" disabled>3) Проверить подпись</button>
+          <button id="tamperBtn" disabled>Изменить сообщение (атака)</button>
+          <button id="resetBtn">Сбросить</button>
+        </div>
+
+        <label for="messageInput">Твое сообщение:</label>
+        <textarea id="messageInput" rows="5">
+Привет! Это мое важное сообщение.
+        </textarea>
+
+        <div class="output-grid">
+          <div>
+            <h3>Хеш сообщения (SHA-256)</h3>
+            <pre id="hashOutput">Пока не вычислен</pre>
+          </div>
+          <div>
+            <h3>Подпись (Base64)</h3>
+            <pre id="signatureOutput">Пока не создана</pre>
+          </div>
+          <div>
+            <h3>Публичный ключ (JWK)</h3>
+            <pre id="publicKeyOutput">Пока не создан</pre>
+          </div>
+          <div>
+            <h3>Статус проверки</h3>
+            <p id="verifyStatus" class="status neutral">Ожидание...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Что важно запомнить</h2>
+        <ul>
+          <li>Приватный ключ нельзя никому показывать.</li>
+          <li>Публичный ключ можно отправлять всем.</li>
+          <li>Подпись не прячет текст, а доказывает его подлинность.</li>
+          <li>Любая маленькая правка текста ломает старую подпись.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Мини-словарик</h2>
+        <dl>
+          <dt>Криптография</dt>
+          <dd>Наука о защите информации с помощью математики.</dd>
+          <dt>Алгоритм</dt>
+          <dd>Набор четких шагов для решения задачи.</dd>
+          <dt>SHA-256</dt>
+          <dd>Популярный способ делать хеш.</dd>
+          <dt>RSA-PSS</dt>
+          <dd>Надежный алгоритм для цифровых подписей.</dd>
+        </dl>
+      </section>
+    </main>
+
+    <footer class="container footer">
+      <p>Сделано как учебный проект. Работает полностью в браузере, без сервера.</p>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
