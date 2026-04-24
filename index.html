@@ -14,8 +14,7 @@
           Очень подробный учебник простыми словами: что это, как работает и где
           используется.
         </p>
-        <p class="badge">Подходит даже для 6 класса</p>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Навигация по курсу">
           <a href="./index.html">Главная</a>
           <a href="./lesson-1.html">Урок 1</a>
           <a href="./lesson-2.html">Урок 2</a>
@@ -75,11 +74,30 @@
           <li>После теории открой <a href="./lab.html">Лабораторию</a>.</li>
         </ul>
       </section>
+
+      <section
+        class="card interactive-demo"
+        data-steps="Ты выбираешь урок.|Читаешь и понимаешь идею.|Смотришь формулы с пояснением.|Проверяешь себя в лаборатории."
+      >
+        <div class="interactive-header">
+          <h2>Интерактив: как проходит обучение</h2>
+          <button class="interactive-btn">Запустить анимацию</button>
+        </div>
+        <div class="interactive-track">
+          <div class="anim-node">Выбор урока</div>
+          <div class="anim-node">Понимание</div>
+          <div class="anim-node">Формулы</div>
+          <div class="anim-node">Практика</div>
+        </div>
+        <p class="anim-caption">Нажми кнопку, чтобы увидеть путь по курсу.</p>
+      </section>
     </main>
 
     <footer class="container footer">
       <p>Сделано как учебный проект. Работает полностью в браузере, без сервера.</p>
     </footer>
 
+    <script src="./nav.js"></script>
+    <script src="./interactions.js"></script>
   </body>
 </html>

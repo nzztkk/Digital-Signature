@@ -11,7 +11,7 @@
       <div class="container">
         <h1>Лаборатория: подпись своими руками</h1>
         <p class="subtitle">Здесь теория превращается в практику.</p>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Навигация по курсу">
           <a href="./index.html">Главная</a>
           <a href="./lesson-1.html">Урок 1</a>
           <a href="./lesson-2.html">Урок 2</a>
@@ -32,6 +32,23 @@
           <li>Нажми «Проверить подпись» — должно быть «верна».</li>
           <li>Нажми «Изменить сообщение», а потом снова проверь подпись.</li>
         </ol>
+      </section>
+
+      <section
+        class="card interactive-demo"
+        data-steps="Генерируем ключи.|Подписываем сообщение.|Проверка проходит успешно.|Меняем текст — проверка падает."
+      >
+        <div class="interactive-header">
+          <h2>Интерактив: что ты увидишь в лаборатории</h2>
+          <button class="interactive-btn">Запустить анимацию</button>
+        </div>
+        <div class="interactive-track">
+          <div class="anim-node">Ключи</div>
+          <div class="anim-node">Подпись</div>
+          <div class="anim-node">Valid</div>
+          <div class="anim-node">Invalid</div>
+        </div>
+        <p class="anim-caption">Нажми кнопку, чтобы увидеть сценарий заранее.</p>
       </section>
 
       <section class="card lab">
@@ -75,6 +92,8 @@
       </section>
     </main>
 
+    <script src="./nav.js"></script>
+    <script src="./interactions.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>

@@ -11,7 +11,7 @@
       <div class="container">
         <h1>Урок 3: хеш — цифровой отпечаток</h1>
         <p class="subtitle">Почему подпись подписывает не весь текст, а хеш.</p>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Навигация по курсу">
           <a href="./index.html">Главная</a>
           <a href="./lesson-1.html">Урок 1</a>
           <a href="./lesson-2.html">Урок 2</a>
@@ -58,10 +58,29 @@
         </p>
       </section>
 
+      <section
+        class="card interactive-demo"
+        data-steps="Берем исходный текст.|Считаем SHA-256.|Получаем короткий хеш.|Меняем 1 символ и хеш уже другой."
+      >
+        <div class="interactive-header">
+          <h2>Интерактив: магия хеша</h2>
+          <button class="interactive-btn">Запустить анимацию</button>
+        </div>
+        <div class="interactive-track">
+          <div class="anim-node">Текст</div>
+          <div class="anim-node">SHA-256</div>
+          <div class="anim-node">Хеш</div>
+          <div class="anim-node">Изменение</div>
+        </div>
+        <p class="anim-caption">Нажми кнопку и посмотри шаги.</p>
+      </section>
+
       <section class="card lesson-nav">
         <a href="./lesson-2.html">← Урок 2</a>
         <a href="./lesson-4.html">Урок 4: Полная схема →</a>
       </section>
     </main>
+    <script src="./nav.js"></script>
+    <script src="./interactions.js"></script>
   </body>
 </html>

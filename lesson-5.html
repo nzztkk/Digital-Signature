@@ -11,7 +11,7 @@
       <div class="container">
         <h1>Урок 5: безопасность и типичные ошибки</h1>
         <p class="subtitle">Что может пойти не так и как себя защитить.</p>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Навигация по курсу">
           <a href="./index.html">Главная</a>
           <a href="./lesson-1.html">Урок 1</a>
           <a href="./lesson-2.html">Урок 2</a>
@@ -67,10 +67,29 @@
         </p>
       </section>
 
+      <section
+        class="card interactive-demo"
+        data-steps="Ключ украли — риск подделки.|Сообщение изменили — подпись не пройдет.|Проверяешь подпись — ловишь подмену.|Хранишь ключ в секрете — защищаешься."
+      >
+        <div class="interactive-header">
+          <h2>Интерактив: где защита срабатывает</h2>
+          <button class="interactive-btn">Запустить анимацию</button>
+        </div>
+        <div class="interactive-track">
+          <div class="anim-node">Угроза</div>
+          <div class="anim-node">Подмена</div>
+          <div class="anim-node">Проверка</div>
+          <div class="anim-node">Защита</div>
+        </div>
+        <p class="anim-caption">Нажми кнопку для анимированной цепочки.</p>
+      </section>
+
       <section class="card lesson-nav">
         <a href="./lesson-4.html">← Урок 4</a>
         <a href="./lab.html">В лабораторию →</a>
       </section>
     </main>
+    <script src="./nav.js"></script>
+    <script src="./interactions.js"></script>
   </body>
 </html>

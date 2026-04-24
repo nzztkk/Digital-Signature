@@ -11,7 +11,7 @@
       <div class="container">
         <h1>Урок 4: полная схема подписи</h1>
         <p class="subtitle">От ключей до проверки, уже с формулами.</p>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Навигация по курсу">
           <a href="./index.html">Главная</a>
           <a href="./lesson-1.html">Урок 1</a>
           <a href="./lesson-2.html">Урок 2</a>
@@ -71,10 +71,29 @@
         </div>
       </section>
 
+      <section
+        class="card interactive-demo"
+        data-steps="Создаем ключи pk/sk.|Считаем хеш H(m).|Делаем подпись Sign(sk, h).|Проверяем Verify(pk, h, s)."
+      >
+        <div class="interactive-header">
+          <h2>Интерактив: полный цикл подписи</h2>
+          <button class="interactive-btn">Запустить анимацию</button>
+        </div>
+        <div class="interactive-track">
+          <div class="anim-node">KeyGen</div>
+          <div class="anim-node">Hash</div>
+          <div class="anim-node">Sign</div>
+          <div class="anim-node">Verify</div>
+        </div>
+        <p class="anim-caption">Нажми кнопку, чтобы увидеть алгоритм в движении.</p>
+      </section>
+
       <section class="card lesson-nav">
         <a href="./lesson-3.html">← Урок 3</a>
         <a href="./lesson-5.html">Урок 5: Безопасность →</a>
       </section>
     </main>
+    <script src="./nav.js"></script>
+    <script src="./interactions.js"></script>
   </body>
 </html>

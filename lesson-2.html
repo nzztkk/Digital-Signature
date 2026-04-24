@@ -11,7 +11,7 @@
       <div class="container">
         <h1>Урок 2: пара ключей</h1>
         <p class="subtitle">Главная идея цифровой подписи.</p>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Навигация по курсу">
           <a href="./index.html">Главная</a>
           <a href="./lesson-1.html">Урок 1</a>
           <a href="./lesson-2.html">Урок 2</a>
@@ -54,10 +54,29 @@
         </p>
       </section>
 
+      <section
+        class="card interactive-demo"
+        data-steps="Генерируем два ключа.|Приватный ключ остается у тебя.|Публичный ключ отдаешь всем.|Любой может проверить подпись."
+      >
+        <div class="interactive-header">
+          <h2>Интерактив: путешествие ключей</h2>
+          <button class="interactive-btn">Запустить анимацию</button>
+        </div>
+        <div class="interactive-track">
+          <div class="anim-node">KeyGen</div>
+          <div class="anim-node">Приватный у тебя</div>
+          <div class="anim-node">Публичный наружу</div>
+          <div class="anim-node">Проверка всеми</div>
+        </div>
+        <p class="anim-caption">Нажми кнопку для анимации.</p>
+      </section>
+
       <section class="card lesson-nav">
         <a href="./lesson-1.html">← Урок 1</a>
         <a href="./lesson-3.html">Урок 3: Хеш →</a>
       </section>
     </main>
+    <script src="./nav.js"></script>
+    <script src="./interactions.js"></script>
   </body>
 </html>

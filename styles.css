@@ -183,8 +183,11 @@ dd {
 .top-nav {
   margin-top: 14px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
 }
 
 .top-nav a {
@@ -194,10 +197,21 @@ dd {
   border-radius: 999px;
   padding: 6px 11px;
   font-size: 0.92rem;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .top-nav a:hover {
   background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.top-nav a.active {
+  background: #fff;
+  color: #0f172a;
+  border-color: #fff;
+  font-weight: 700;
 }
 
 .lesson-nav {
@@ -209,8 +223,15 @@ dd {
 
 .lesson-nav a {
   text-decoration: none;
-  color: var(--accent-2);
+  color: #fff;
   font-weight: 700;
+  background: var(--accent);
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.lesson-nav a:hover {
+  background: var(--accent-2);
 }
 
 .formula {
@@ -231,4 +252,74 @@ dd {
 
 .roadmap li {
   margin-bottom: 8px;
+}
+
+.interactive-demo {
+  border: 1px solid #bfdbfe;
+  background: #f8fbff;
+}
+
+.interactive-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.interactive-btn {
+  background: #0f766e;
+}
+
+.interactive-btn:hover {
+  background: #115e59;
+}
+
+.interactive-track {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.anim-node {
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+  color: #334155;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.anim-node.active {
+  background: #dbeafe;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.anim-caption {
+  margin-top: 10px;
+  min-height: 26px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 28px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .lesson-nav {
+    flex-direction: column;
+  }
+
+  .lesson-nav a {
+    text-align: center;
+  }
 }
