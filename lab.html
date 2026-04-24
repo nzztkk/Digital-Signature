@@ -116,6 +116,50 @@
         </div>
       </section>
 
+      <section class="card">
+        <h2>Продвинутый разбор для студентов</h2>
+        <p>
+          Здесь можно посмотреть, как работают криптоинструменты на более глубоком
+          уровне: SHA-256, симметричное шифрование и асимметричное шифрование.
+        </p>
+
+        <label for="advancedInput">Входные данные для анализа:</label>
+        <textarea id="advancedInput" rows="4">Cryptography is awesome</textarea>
+
+        <div class="controls">
+          <button id="analyzeShaBtn">Разобрать SHA-256 по шагам</button>
+          <button id="runAesBtn">Показать AES-GCM шифрование</button>
+          <button id="runRsaEncryptBtn">Показать RSA-OAEP шифрование</button>
+        </div>
+
+        <div class="process-grid">
+          <div>
+            <h3>SHA: подготовка</h3>
+            <pre id="shaPrepOutput">Ожидание запуска...</pre>
+          </div>
+          <div>
+            <h3>SHA: расписание слов W[t]</h3>
+            <pre id="shaScheduleOutput">Ожидание запуска...</pre>
+          </div>
+          <div>
+            <h3>SHA: раунды компрессии</h3>
+            <pre id="shaRoundsOutput">Ожидание запуска...</pre>
+          </div>
+          <div>
+            <h3>SHA: итог</h3>
+            <pre id="shaFinalOutput">Ожидание запуска...</pre>
+          </div>
+          <div>
+            <h3>AES-GCM: шифрование/дешифрование</h3>
+            <pre id="aesOutput">Ожидание запуска...</pre>
+          </div>
+          <div>
+            <h3>RSA-OAEP: шифрование/дешифрование</h3>
+            <pre id="rsaEncryptOutput">Ожидание запуска...</pre>
+          </div>
+        </div>
+      </section>
+
       <section class="card lesson-nav">
         <a href="./lesson-5.html">← Урок 5</a>
         <a href="./index.html">На главную →</a>
