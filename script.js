@@ -231,7 +231,7 @@ function flowReset() {
 async function flowPlay() {
   flowReset();
   for (let i = 1; i < flowNodes.length; i += 1) {
-    await new Promise((r) => setTimeout(r, 450));
+    await new Promise((r) => setTimeout(r, 700));
     setFlowState(i);
   }
 }
@@ -311,7 +311,7 @@ function diffusionStep() {
 async function diffusionAuto() {
   for (let i = 0; i < 6; i += 1) {
     diffusionStep();
-    await new Promise((r) => setTimeout(r, 280));
+    await new Promise((r) => setTimeout(r, 420));
   }
 }
 
@@ -378,7 +378,7 @@ function dbgPlayPause() {
       return;
     }
     dbgStep();
-  }, 300);
+  }, 460);
 }
 
 function dbgReset() {
