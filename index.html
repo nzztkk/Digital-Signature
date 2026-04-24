@@ -3,101 +3,133 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Курс: Цифровая подпись для детей</title>
+    <title>Криптографический конвейер: подпись и асимметрия</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script>
+      window.MathJax = { tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] } };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   </head>
   <body>
     <header class="hero">
       <div class="container">
-        <h1>Курс: цифровая подпись с нуля</h1>
+        <h1>Интерактивная платформа: цифровая подпись и асимметричное шифрование</h1>
         <p class="subtitle">
-          Очень подробный учебник простыми словами: что это, как работает и где
-          используется.
+          Архитектура, формулы, memory view SHA-256, data flow и технический практикум.
         </p>
-        <nav class="top-nav" aria-label="Навигация по курсу">
-          <a href="./index.html">Главная</a>
-          <a href="./lesson-1.html">Урок 1</a>
-          <a href="./lesson-2.html">Урок 2</a>
-          <a href="./lesson-3.html">Урок 3</a>
-          <a href="./lesson-4.html">Урок 4</a>
-          <a href="./lesson-5.html">Урок 5</a>
-          <a href="./lab.html">Лаборатория</a>
-        </nav>
       </div>
     </header>
 
     <main class="container">
       <section class="card">
-        <h2>Как пользоваться этим сайтом</h2>
-        <ol class="roadmap">
-          <li>
-            Пройди уроки по порядку: так будет проще понять тему без пробелов.
-          </li>
-          <li>
-            После каждого урока отвечай себе на вопрос: «Объясню ли я это другу?»
-          </li>
-          <li>
-            В конце зайди в лабораторию и проверь, как подпись ломается при
-            изменении текста.
-          </li>
-        </ol>
-      </section>
-
-      <section class="card">
-        <h2>План курса</h2>
-        <ul>
-          <li><strong>Урок 1:</strong> Что такое цифровая подпись и зачем она нужна</li>
-          <li><strong>Урок 2:</strong> Ключи: приватный и публичный</li>
-          <li><strong>Урок 3:</strong> Хеш-функция и «отпечаток» сообщения</li>
-          <li><strong>Урок 4:</strong> Полная схема подписи с формулами</li>
-          <li><strong>Урок 5:</strong> Безопасность, атаки и ошибки</li>
-          <li><strong>Лаборатория:</strong> Подписываем и проверяем сообщение</li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <h2>О чем важно помнить</h2>
-        <p>
-          Цифровая подпись не скрывает текст. Она доказывает:
+        <h2>Модуль 1. Архитектурный ландшафт</h2>
+        <div class="pipeline">
+          <div class="node">Генератор ключей<br />(RSA / ECDSA)</div>
+          <div class="arrow">→</div>
+          <div class="node">Хэш-функтор<br />(SHA-256)</div>
+          <div class="arrow">→</div>
+          <div class="node">Подписатор / Шифроватор</div>
+          <div class="arrow">→</div>
+          <div class="node">Проверка / Дешифрование</div>
+        </div>
+        <p class="latex">
+          RSA базовые формулы: \( n=pq \), \( \varphi(n)=(p-1)(q-1) \), \( ed \equiv 1 \pmod{\varphi(n)} \)
         </p>
-        <ol>
-          <li><strong>Авторство:</strong> сообщение подписал именно владелец ключа.</li>
-          <li><strong>Целостность:</strong> сообщение не изменили в пути.</li>
-        </ol>
+        <p class="latex">
+          Шифрование: \( c = m^e \bmod n \), дешифрование: \( m = c^d \bmod n \)
+        </p>
       </section>
 
       <section class="card">
-        <h2>Как начать</h2>
-        <ul>
-          <li>Открой <a href="./lesson-1.html">Урок 1</a>.</li>
-          <li>Дальше иди по стрелкам «Назад/Вперед» внизу страниц.</li>
-          <li>После теории открой <a href="./lab.html">Лабораторию</a>.</li>
-        </ul>
+        <h2>RSA vs ECDSA: инженерное сравнение</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>RSA</th>
+                <th>ECDSA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Размер ключа</td><td>2048/3072+ бит</td><td>256/384 бит</td></tr>
+              <tr><td>Подпись</td><td>Больше по размеру</td><td>Меньше по размеру</td></tr>
+              <tr><td>Скорость подписи</td><td>Обычно ниже</td><td>Обычно выше</td></tr>
+              <tr><td>Скорость проверки</td><td>Часто выше</td><td>Часто ниже RSA verify</td></tr>
+              <tr><td>Вычислительная модель</td><td>\( \bmod n \)</td><td>Эллиптическая кривая</td></tr>
+              <tr><td>Стойкость (при корректных параметрах)</td><td>Высокая</td><td>Высокая</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      <section
-        class="card interactive-demo"
-        data-steps="Ты выбираешь урок.|Читаешь и понимаешь идею.|Смотришь формулы с пояснением.|Проверяешь себя в лаборатории."
-      >
-        <div class="interactive-header">
-          <h2>Интерактив: как проходит обучение</h2>
-          <button class="interactive-btn">Запустить анимацию</button>
+      <section class="card">
+        <h2>Модуль 2. Визуализация ячеек и памяти (SHA-256)</h2>
+        <label for="shaInput">Входные данные:</label>
+        <textarea id="shaInput" rows="3">Digital signatures under the hood</textarea>
+        <div class="controls">
+          <button id="shaAnimateBtn">Запустить разбиение и хэширование</button>
         </div>
-        <div class="interactive-track">
-          <div class="anim-node">Выбор урока</div>
-          <div class="anim-node">Понимание</div>
-          <div class="anim-node">Формулы</div>
-          <div class="anim-node">Практика</div>
+        <div class="process-grid">
+          <div><h3>Data Cells</h3><pre id="cellsOutput">Ожидание...</pre></div>
+          <div><h3>512-bit Blocks</h3><pre id="blocksOutput">Ожидание...</pre></div>
+          <div><h3>W[t] Schedule</h3><pre id="scheduleOutput">Ожидание...</pre></div>
+          <div><h3>Компрессия</h3><pre id="roundsOutput">Ожидание...</pre></div>
+          <div><h3>Итоговый digest</h3><pre id="digestOutput">Ожидание...</pre></div>
         </div>
-        <p class="anim-caption">Нажми кнопку, чтобы увидеть путь по курсу.</p>
+      </section>
+
+      <section class="card">
+        <h2>Модуль 3. Механика перемещения данных (Data Flow)</h2>
+        <p>Пайплайн состояния объекта: <code>raw → hashed → signed → transmitted → verified</code></p>
+        <div class="controls">
+          <button id="flowPlayBtn">Play pipeline</button>
+          <button id="flowStepBtn">Step</button>
+          <button id="flowResetBtn">Reset</button>
+        </div>
+        <div class="pipeline" id="flowPipeline">
+          <div class="node flow-node">Raw</div>
+          <div class="arrow">→</div>
+          <div class="node flow-node">Hashed</div>
+          <div class="arrow">→</div>
+          <div class="node flow-node">Signed</div>
+          <div class="arrow">→</div>
+          <div class="node flow-node">Transmitted</div>
+          <div class="arrow">→</div>
+          <div class="node flow-node">Verified</div>
+        </div>
+        <pre id="flowLog">Состояние: raw</pre>
+      </section>
+
+      <section class="card">
+        <h2>Практикум: подпись, проверка, AES-GCM и RSA-OAEP</h2>
+        <label for="messageInput">Сообщение:</label>
+        <textarea id="messageInput" rows="4">Exam answer v1: cryptography report</textarea>
+        <div class="controls">
+          <button id="generateKeysBtn">1) Ключи подписи RSA-PSS</button>
+          <button id="signBtn" disabled>2) Подписать</button>
+          <button id="verifyBtn" disabled>3) Проверить подпись</button>
+          <button id="tamperBtn" disabled>Подменить 1 бит</button>
+          <button id="runAesBtn">AES-GCM encrypt/decrypt</button>
+          <button id="runRsaEncryptBtn">RSA-OAEP encrypt/decrypt</button>
+          <button id="resetBtn">Сброс</button>
+        </div>
+        <div class="process-grid">
+          <div><h3>Хэш</h3><pre id="hashOutput">Ожидание...</pre></div>
+          <div><h3>Подпись</h3><pre id="signatureOutput">Ожидание...</pre></div>
+          <div><h3>Публичный ключ</h3><pre id="publicKeyOutput">Ожидание...</pre></div>
+          <div><h3>Проверка</h3><pre id="verifyProcessOutput">Ожидание...</pre></div>
+          <div><h3>AES-GCM</h3><pre id="aesOutput">Ожидание...</pre></div>
+          <div><h3>RSA-OAEP</h3><pre id="rsaEncryptOutput">Ожидание...</pre></div>
+        </div>
+        <p id="verifyStatus" class="status neutral">Ожидание...</p>
+        <p class="latex">
+          Проверка целостности: если \(m' = m \oplus \Delta\), где \(\Delta\) меняет хотя бы 1 бит,
+          то практически всегда \(H(m') \neq H(m)\), следовательно подпись невалидна.
+        </p>
       </section>
     </main>
 
-    <footer class="container footer">
-      <p>Сделано как учебный проект. Работает полностью в браузере, без сервера.</p>
-    </footer>
-
-    <script src="./nav.js"></script>
-    <script src="./interactions.js"></script>
+    <script src="./script.js"></script>
   </body>
 </html>
