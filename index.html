@@ -85,12 +85,53 @@
         <div class="controls">
           <button id="shaAnimateBtn">Запустить разбиение и хэширование</button>
         </div>
-        <div class="process-grid">
-          <div><h3>1) Вход и байты</h3><pre id="cellsOutput">Ожидание...</pre></div>
-          <div><h3>2) Preprocessing</h3><pre id="blocksOutput">Ожидание...</pre></div>
-          <div><h3>3) Расписание W[t]</h3><pre id="scheduleOutput">Ожидание...</pre></div>
-          <div><h3>4) Раунды компрессии</h3><pre id="roundsOutput">Ожидание...</pre></div>
-          <div><h3>5) Итоговый digest</h3><pre id="digestOutput">Ожидание...</pre></div>
+        <div class="table-wrap">
+          <table class="sha-table">
+            <thead>
+              <tr>
+                <th class="sha-col-step">Этап</th>
+                <th class="sha-col-meaning">Что это означает</th>
+                <th class="sha-col-data">Данные (скролл)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1) Вход и байты</strong></td>
+                <td class="sha-meaning">
+                  Преобразование пользовательского текста в последовательность UTF-8 байтов.
+                </td>
+                <td><pre id="cellsOutput" class="sha-data">Ожидание...</pre></td>
+              </tr>
+              <tr>
+                <td><strong>2) Preprocessing</strong></td>
+                <td class="sha-meaning">
+                  Padding сообщения и подготовка блоков по 512 бит перед раундами SHA-256.
+                </td>
+                <td><pre id="blocksOutput" class="sha-data">Ожидание...</pre></td>
+              </tr>
+              <tr>
+                <td><strong>3) Расписание W[t]</strong></td>
+                <td class="sha-meaning">
+                  Расширение 16 исходных слов в 64 рабочих слова для компрессионной функции.
+                </td>
+                <td><pre id="scheduleOutput" class="sha-data">Ожидание...</pre></td>
+              </tr>
+              <tr>
+                <td><strong>4) Раунды компрессии</strong></td>
+                <td class="sha-meaning">
+                  Пошаговое обновление внутреннего состояния регистров \(a..h\).
+                </td>
+                <td><pre id="roundsOutput" class="sha-data">Ожидание...</pre></td>
+              </tr>
+              <tr>
+                <td><strong>5) Итоговый digest</strong></td>
+                <td class="sha-meaning">
+                  Финальный 256-битный хэш и проверка совпадения с реализацией WebCrypto.
+                </td>
+                <td><pre id="digestOutput" class="sha-data">Ожидание...</pre></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="deep-dive">
           <strong>Подробный разбор:</strong> SHA-256 выполняет preprocessing (padding + длина), затем 64-раундовую компрессию для каждого

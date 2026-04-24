@@ -215,6 +215,37 @@ th {
   background: #17243f;
 }
 
+.sha-table {
+  table-layout: fixed;
+}
+
+.sha-col-step {
+  width: 17%;
+}
+
+.sha-col-meaning {
+  width: 28%;
+}
+
+.sha-col-data {
+  width: 55%;
+}
+
+.sha-meaning {
+  color: #c7d5ea;
+  font-size: 0.95rem;
+  vertical-align: top;
+}
+
+pre.sha-data {
+  min-height: 170px;
+  max-height: 170px;
+  overflow: auto;
+  white-space: pre;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .story-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
