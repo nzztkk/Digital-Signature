@@ -281,8 +281,28 @@ CPU_R->>CPU_R: Verify(pk,H(m),s)</pre>
           <button id="dbgPlayBtn">Play/Pause</button>
           <button id="dbgResetBtn">Reset</button>
         </div>
-        <pre id="dbgRegisters">Регистры: ожидание...</pre>
-        <pre id="dbgTrace">Трасса: ожидание...</pre>
+        <div class="debug-registers" id="dbgRegisters">
+          <div class="reg-card"><span class="reg-label">Операция</span><span id="dbgOp">-</span></div>
+          <div class="reg-card"><span class="reg-label">result</span><span id="dbgResult">-</span></div>
+          <div class="reg-card"><span class="reg-label">baseReg</span><span id="dbgBaseReg">-</span></div>
+          <div class="reg-card"><span class="reg-label">expReg</span><span id="dbgExpReg">-</span></div>
+          <div class="reg-card"><span class="reg-label">mod</span><span id="dbgModReg">-</span></div>
+        </div>
+        <div class="table-wrap">
+          <table class="dbg-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Операция</th>
+                <th>result</th>
+                <th>base</th>
+                <th>exp</th>
+                <th>bit</th>
+              </tr>
+            </thead>
+            <tbody id="dbgTraceBody"></tbody>
+          </table>
+        </div>
         <div class="deep-dive">
           <strong>Подробный разбор:</strong> используется алгоритм square-and-multiply для вычисления \(a^e \bmod n\). В каждом шаге
           контролируется бит экспоненты, затем условно выполняется умножение с редукцией по модулю и обязательное возведение базы в квадрат.

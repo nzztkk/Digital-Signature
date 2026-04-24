@@ -308,6 +308,47 @@ input[type="number"] {
   color: #c8dcf8;
 }
 
+.debug-registers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.reg-card {
+  border: 1px solid #365789;
+  background: #0d1a31;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reg-label {
+  color: #9fb5d7;
+  font-size: 0.8rem;
+}
+
+.reg-card span:last-child {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  color: #e0ecff;
+}
+
+.dbg-table {
+  table-layout: fixed;
+}
+
+.dbg-table th,
+.dbg-table td {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+.dbg-table tbody tr.active-step {
+  background: #12325f;
+}
+
 .formula {
   background: #0b1020;
   color: #dbeafe;

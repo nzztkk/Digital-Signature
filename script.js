@@ -24,7 +24,12 @@ const dbgBase = el("dbgBase");
 const dbgExp = el("dbgExp");
 const dbgMod = el("dbgMod");
 const dbgRegisters = el("dbgRegisters");
-const dbgTrace = el("dbgTrace");
+const dbgTraceBody = el("dbgTraceBody");
+const dbgOp = el("dbgOp");
+const dbgResult = el("dbgResult");
+const dbgBaseReg = el("dbgBaseReg");
+const dbgExpReg = el("dbgExpReg");
+const dbgModReg = el("dbgModReg");
 
 const flowNodes = [...document.querySelectorAll(".flow-node")];
 const flowLog = el("flowLog");
@@ -287,8 +292,12 @@ function resetAll() {
   stateStep = 0;
   memoryGrid.innerHTML = "";
   diffuseLog.textContent = "Ожидание инициализации...";
-  dbgRegisters.textContent = "Регистры: ожидание...";
-  dbgTrace.textContent = "Трасса: ожидание...";
+  dbgOp.textContent = "-";
+  dbgResult.textContent = "-";
+  dbgBaseReg.textContent = "-";
+  dbgExpReg.textContent = "-";
+  dbgModReg.textContent = "-";
+  dbgTraceBody.innerHTML = "";
   setStatus("Ожидание...", "neutral");
   flowReset();
   el("signBtn").disabled = true;
@@ -372,12 +381,26 @@ function buildModExpTrace(base, exp, mod) {
 function renderDbgStep() {
   if (!dbgSteps.length) return;
   const s = dbgSteps[Math.min(dbgIndex, dbgSteps.length - 1)];
-  dbgRegisters.textContent = `op=${s.op}\nresult=${s.result}\nbaseReg=${s.b}\nexpReg=${s.e}\nmod=${dbgMod.value}`;
-  const shown = dbgSteps
-    .slice(0, dbgIndex + 1)
-    .map((st, i) => `${i}: ${st.op} | result=${st.result} base=${st.b} exp=${st.e}${st.bit !== undefined ? ` bit=${st.bit}` : ""}`)
-    .join("\n");
-  dbgTrace.textContent = shown || "trace empty";
+  dbgOp.textContent = s.op;
+  dbgResult.textContent = String(s.result);
+  dbgBaseReg.textContent = String(s.b);
+  dbgExpReg.textContent = String(s.e);
+  dbgModReg.textContent = String(dbgMod.value);
+
+  dbgTraceBody.innerHTML = "";
+  dbgSteps.slice(0, dbgIndex + 1).forEach((st, i) => {
+    const tr = document.createElement("tr");
+    if (i === dbgIndex) tr.classList.add("active-step");
+    tr.innerHTML = `
+      <td>${i}</td>
+      <td>${st.op}</td>
+      <td>${st.result}</td>
+      <td>${st.b}</td>
+      <td>${st.e}</td>
+      <td>${st.bit !== undefined ? st.bit : "-"}</td>
+    `;
+    dbgTraceBody.appendChild(tr);
+  });
 }
 
 function dbgInit() {
@@ -385,7 +408,8 @@ function dbgInit() {
   const exp = Number(dbgExp.value);
   const mod = Number(dbgMod.value);
   if (!Number.isFinite(base) || !Number.isFinite(exp) || !Number.isFinite(mod) || mod <= 1 || exp < 0) {
-    dbgRegisters.textContent = "Некорректные параметры для mod exp.";
+    dbgOp.textContent = "ошибка";
+    dbgResult.textContent = "Некорректные параметры";
     return;
   }
   dbgSteps = buildModExpTrace(base, exp, mod);
@@ -423,8 +447,12 @@ function dbgReset() {
   }
   dbgSteps = [];
   dbgIndex = 0;
-  dbgRegisters.textContent = "Регистры: ожидание...";
-  dbgTrace.textContent = "Трасса: ожидание...";
+  dbgOp.textContent = "-";
+  dbgResult.textContent = "-";
+  dbgBaseReg.textContent = "-";
+  dbgExpReg.textContent = "-";
+  dbgModReg.textContent = "-";
+  dbgTraceBody.innerHTML = "";
 }
 
 el("shaAnimateBtn").addEventListener("click", () =>
