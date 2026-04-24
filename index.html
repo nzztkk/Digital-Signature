@@ -102,6 +102,113 @@
       </section>
 
       <section class="card">
+        <h2>Детальная раскадровка (Storyboarding)</h2>
+        <div class="story-grid">
+          <article class="story-card">
+            <h3>Этап 1. Хэширование</h3>
+            <p><strong>Вход:</strong> текстовый блок сообщения в памяти процесса отправителя.</p>
+            <p><strong>Трансформация:</strong> блок разбивается на 512-битные чанки, сжимается в digest 256 бит.</p>
+            <p><strong>Перемещение:</strong> digest отправляется по внутренней системной шине в модуль подписи.</p>
+          </article>
+          <article class="story-card">
+            <h3>Этап 2. Генерация ключей</h3>
+            <p><strong>Вход:</strong> источник энтропии + параметры алгоритма (RSA/ECDSA).</p>
+            <p><strong>Трансформация:</strong> создается пара \(sk, pk\), где приватный ключ остается локально.</p>
+            <p><strong>Перемещение:</strong> публичный ключ копируется в хранилище сертификатов/профиль пользователя.</p>
+          </article>
+          <article class="story-card">
+            <h3>Этап 3. Подписание</h3>
+            <p><strong>Вход:</strong> digest \(h\) и приватный ключ \(sk\).</p>
+            <p><strong>Трансформация:</strong> выполняется операция подписи \(s = Sign(sk, h)\).</p>
+            <p><strong>Перемещение:</strong> объект \((m,s,pk)\) уходит на сетевой интерфейс и далее получателю.</p>
+          </article>
+          <article class="story-card">
+            <h3>Этап 4. Верификация</h3>
+            <p><strong>Вход:</strong> полученные \(m,s\) и доверенный \(pk\).</p>
+            <p><strong>Трансформация:</strong> повторно вычисляется \(H(m)\), затем \(Verify(pk,H(m),s)\).</p>
+            <p><strong>Перемещение:</strong> результат верификации записывается в память процесса получателя (valid/invalid).</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Схемы архитектуры потоков (Data Flow Diagrams)</h2>
+        <p>Текстовые описания для Mermaid-диаграмм:</p>
+        <pre>flowchart LR
+Client[Клиент: Sender App] --> Hash[SHA-256 Engine]
+Hash --> Sign[Sign Engine / Private Key]
+Sign --> Server[Сервер транспортировки]
+Server --> Receiver[Клиент: Receiver App]
+Receiver --> Verify[Verify Engine / Public Key]
+CA[Центр сертификации] --> Client
+CA --> Receiver</pre>
+        <pre>sequenceDiagram
+participant CPU_S as CPU Отправителя
+participant RAM_S as RAM Отправителя
+participant NET as Сетевая шина/сервер
+participant RAM_R as RAM Получателя
+participant CPU_R as CPU Получателя
+CPU_S->>RAM_S: Чтение m, sk
+CPU_S->>CPU_S: h=H(m), s=Sign(sk,h)
+CPU_S->>NET: Передача (m,s,cert)
+NET->>RAM_R: Запись пакета
+CPU_R->>RAM_R: Чтение (m,s,pk)
+CPU_R->>CPU_R: Verify(pk,H(m),s)</pre>
+      </section>
+
+      <section class="card">
+        <h2>Интерактивная таблица состояний</h2>
+        <p>Таблица заполняется автоматически во время операций подписи/проверки/шифрования.</p>
+        <div class="table-wrap">
+          <table id="stateTable">
+            <thead>
+              <tr>
+                <th>Шаг</th>
+                <th>Объект</th>
+                <th>Состояние данных</th>
+                <th>Примененный ключ</th>
+                <th>Результат</th>
+              </tr>
+            </thead>
+            <tbody id="stateTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Визуализация ячеек памяти и диффузии</h2>
+        <p>
+          Ниже симуляция: исходные биты раскладываются по ячейкам блока, затем раунды диффузии перемешивают состояние
+          (почему шифртекст похож на «белый шум»).
+        </p>
+        <div class="controls">
+          <button id="diffuseInitBtn">Загрузить биты из сообщения</button>
+          <button id="diffuseStepBtn">Раунд диффузии</button>
+          <button id="diffuseAutoBtn">Авто 6 раундов</button>
+        </div>
+        <div id="memoryGrid" class="memory-grid"></div>
+        <pre id="diffuseLog">Ожидание инициализации...</pre>
+      </section>
+
+      <section class="card">
+        <h2>Режим отладки (Debugger View)</h2>
+        <p>Пошаговый просмотр операции modular exponentiation \(a^e \bmod n\).</p>
+        <div class="debug-grid">
+          <label>Основание a <input id="dbgBase" type="number" value="123" /></label>
+          <label>Показатель e <input id="dbgExp" type="number" value="17" /></label>
+          <label>Модуль n <input id="dbgMod" type="number" value="3233" /></label>
+        </div>
+        <div class="controls">
+          <button id="dbgInitBtn">Init Trace</button>
+          <button id="dbgStepBtn">Step</button>
+          <button id="dbgPlayBtn">Play/Pause</button>
+          <button id="dbgResetBtn">Reset</button>
+        </div>
+        <pre id="dbgRegisters">Регистры: ожидание...</pre>
+        <pre id="dbgTrace">Трасса: ожидание...</pre>
+      </section>
+
+      <section class="card">
         <h2>Практикум: подпись, проверка, AES-GCM и RSA-OAEP</h2>
         <label for="messageInput">Сообщение:</label>
         <textarea id="messageInput" rows="4">Exam answer v1: cryptography report</textarea>

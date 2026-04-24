@@ -203,6 +203,57 @@ th {
   background: #17243f;
 }
 
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.story-card {
+  border: 1px solid #33527f;
+  background: #0f1b30;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(28px, 1fr));
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.mem-cell {
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #3e5b89;
+  background: #13213a;
+  font-family: "JetBrains Mono", Consolas, monospace;
+}
+
+.mem-cell.one {
+  background: #14532d;
+  border-color: #16a34a;
+}
+
+.debug-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+input[type="number"] {
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  background: #0b1323;
+  color: var(--text);
+}
+
 .formula {
   background: #0b1020;
   color: #dbeafe;

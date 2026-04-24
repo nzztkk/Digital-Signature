@@ -17,6 +17,14 @@ const blocksOutput = el("blocksOutput");
 const scheduleOutput = el("scheduleOutput");
 const roundsOutput = el("roundsOutput");
 const digestOutput = el("digestOutput");
+const stateTableBody = el("stateTableBody");
+const memoryGrid = el("memoryGrid");
+const diffuseLog = el("diffuseLog");
+const dbgBase = el("dbgBase");
+const dbgExp = el("dbgExp");
+const dbgMod = el("dbgMod");
+const dbgRegisters = el("dbgRegisters");
+const dbgTrace = el("dbgTrace");
 
 const flowNodes = [...document.querySelectorAll(".flow-node")];
 const flowLog = el("flowLog");
@@ -26,6 +34,12 @@ let signatureBuffer = null;
 let signedHash = "";
 let rsaOaepKeys = null;
 let flowIndex = 0;
+let stateStep = 0;
+let memoryBits = [];
+let diffusionRound = 0;
+let dbgSteps = [];
+let dbgIndex = 0;
+let dbgTimer = null;
 
 const rsaPssAlgo = {
   name: "RSA-PSS",
@@ -49,6 +63,12 @@ function toBase64(buffer) {
 function setStatus(text, mode = "neutral") {
   verifyStatus.textContent = text;
   verifyStatus.className = `status ${mode}`;
+}
+function addStateRow(object, state, key, result) {
+  stateStep += 1;
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td>${stateStep}</td><td>${object}</td><td>${state}</td><td>${key}</td><td>${result}</td>`;
+  stateTableBody.appendChild(tr);
 }
 function setFlowState(idx) {
   flowIndex = idx;
@@ -131,6 +151,7 @@ async function runShaModule() {
   scheduleOutput.textContent = d.wPreview.join("\n");
   roundsOutput.textContent = d.rounds.join("\n");
   digestOutput.textContent = `manual: ${d.hashHex}\nwebcrypto: ${native}\nсовпадение: ${d.hashHex === native}`;
+  addStateRow("SHA Engine", "raw bytes -> padded blocks -> digest", "none", d.hashHex);
 }
 
 async function generateSignatureKeys() {
@@ -140,6 +161,7 @@ async function generateSignatureKeys() {
   publicKeyOutput.textContent = JSON.stringify(pub, null, 2);
   el("signBtn").disabled = false;
   setStatus("Ключи готовы. Подпишите сообщение.", "neutral");
+  addStateRow("KeyGen", "generated RSA-PSS keypair", "entropy + rsa-pss", "pk/sk created");
 }
 
 async function signMessage() {
@@ -153,6 +175,7 @@ async function signMessage() {
   verifyProcessOutput.textContent = "Подпись создана: s = Sign(sk, H(m))";
   el("verifyBtn").disabled = false;
   el("tamperBtn").disabled = false;
+  addStateRow("Signature", `h=${signedHash.slice(0, 16)}...`, "private key (sk)", "signature s created");
 }
 
 async function verifySignature() {
@@ -163,6 +186,7 @@ async function verifySignature() {
   hashOutput.textContent = currentHash;
   verifyProcessOutput.textContent = `signed hash: ${signedHash}\ncurrent hash: ${currentHash}\nverify: ${valid}`;
   setStatus(valid ? "VALID: подпись корректна." : "INVALID: данные изменены или подпись чужая.", valid ? "ok" : "bad");
+  addStateRow("Verify", `recomputed h=${currentHash.slice(0, 16)}...`, "public key (pk)", valid ? "valid" : "invalid");
 }
 
 function tamperBit() {
@@ -170,6 +194,7 @@ function tamperBit() {
   const c = t.charCodeAt(0) ^ 1;
   messageInput.value = String.fromCharCode(c) + t.slice(1);
   setStatus("Изменен 1 бит первого символа. Проверьте подпись повторно.", "neutral");
+  addStateRow("Tamper", "bit flip applied to payload", "none", "payload mutated");
 }
 
 async function runAes() {
@@ -179,6 +204,7 @@ async function runAes() {
   const enc = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, textToBytes(msg));
   const dec = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, enc);
   aesOutput.textContent = `iv: ${toHex(iv)}\ncipher(base64): ${toBase64(enc)}\nplain: ${new TextDecoder().decode(dec)}`;
+  addStateRow("AES-GCM", "plaintext -> ciphertext -> plaintext", "AES session key", "confidentiality + integrity");
 }
 
 async function runRsaOaep() {
@@ -193,6 +219,7 @@ async function runRsaOaep() {
   const enc = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, rsaOaepKeys.publicKey, textToBytes(msg));
   const dec = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, rsaOaepKeys.privateKey, enc);
   rsaEncryptOutput.textContent = `cipher(base64): ${toBase64(enc)}\nplain: ${new TextDecoder().decode(dec)}`;
+  addStateRow("RSA-OAEP", "plaintext -> ciphertext -> plaintext", "pk then sk", "asymmetric encryption OK");
 }
 
 function flowStep() {
@@ -221,6 +248,12 @@ function resetAll() {
   blocksOutput.textContent = "Ожидание...";
   scheduleOutput.textContent = "Ожидание...";
   roundsOutput.textContent = "Ожидание...";
+  stateTableBody.innerHTML = "";
+  stateStep = 0;
+  memoryGrid.innerHTML = "";
+  diffuseLog.textContent = "Ожидание инициализации...";
+  dbgRegisters.textContent = "Регистры: ожидание...";
+  dbgTrace.textContent = "Трасса: ожидание...";
   setStatus("Ожидание...", "neutral");
   flowReset();
   el("signBtn").disabled = true;
@@ -229,6 +262,134 @@ function resetAll() {
   signatureKeys = null;
   signatureBuffer = null;
   signedHash = "";
+  if (dbgTimer) {
+    clearInterval(dbgTimer);
+    dbgTimer = null;
+  }
+  dbgSteps = [];
+  dbgIndex = 0;
+}
+
+function renderMemoryBits() {
+  memoryGrid.innerHTML = "";
+  memoryBits.forEach((bit) => {
+    const div = document.createElement("div");
+    div.className = `mem-cell ${bit ? "one" : ""}`;
+    div.textContent = bit ? "1" : "0";
+    memoryGrid.appendChild(div);
+  });
+}
+
+function initDiffusion() {
+  const src = textToBytes(messageInput.value || "A");
+  const first8 = [...src.slice(0, 8)];
+  while (first8.length < 8) first8.push(0);
+  memoryBits = [];
+  first8.forEach((byte) => {
+    for (let i = 7; i >= 0; i -= 1) memoryBits.push((byte >> i) & 1);
+  });
+  diffusionRound = 0;
+  renderMemoryBits();
+  diffuseLog.textContent = "Round 0: исходное распределение битов в 64 ячейках.";
+}
+
+function diffusionStep() {
+  if (!memoryBits.length) initDiffusion();
+  const next = new Array(memoryBits.length).fill(0);
+  for (let i = 0; i < memoryBits.length; i += 1) {
+    const srcIdx = (i * 13 + 7) % memoryBits.length;
+    const neighbor = memoryBits[(srcIdx + 1) % memoryBits.length];
+    next[i] = memoryBits[srcIdx] ^ neighbor ^ (i % 3 === 0 ? 1 : 0);
+  }
+  memoryBits = next;
+  diffusionRound += 1;
+  renderMemoryBits();
+  const ones = memoryBits.reduce((a, b) => a + b, 0);
+  diffuseLog.textContent = `Round ${diffusionRound}: активных бит= ${ones}, визуально структура становится шумоподобной.`;
+}
+
+async function diffusionAuto() {
+  for (let i = 0; i < 6; i += 1) {
+    diffusionStep();
+    await new Promise((r) => setTimeout(r, 280));
+  }
+}
+
+function buildModExpTrace(base, exp, mod) {
+  const steps = [];
+  let result = 1 % mod;
+  let b = base % mod;
+  let e = exp;
+  steps.push({ op: "init", result, b, e });
+  while (e > 0) {
+    steps.push({ op: "check-bit", result, b, e, bit: e & 1 });
+    if (e & 1) {
+      result = (result * b) % mod;
+      steps.push({ op: "mul", result, b, e });
+    }
+    b = (b * b) % mod;
+    e = Math.floor(e / 2);
+    steps.push({ op: "square-shift", result, b, e });
+  }
+  return steps;
+}
+
+function renderDbgStep() {
+  if (!dbgSteps.length) return;
+  const s = dbgSteps[Math.min(dbgIndex, dbgSteps.length - 1)];
+  dbgRegisters.textContent = `op=${s.op}\nresult=${s.result}\nbaseReg=${s.b}\nexpReg=${s.e}\nmod=${dbgMod.value}`;
+  const shown = dbgSteps
+    .slice(0, dbgIndex + 1)
+    .map((st, i) => `${i}: ${st.op} | result=${st.result} base=${st.b} exp=${st.e}${st.bit !== undefined ? ` bit=${st.bit}` : ""}`)
+    .join("\n");
+  dbgTrace.textContent = shown || "trace empty";
+}
+
+function dbgInit() {
+  const base = Number(dbgBase.value);
+  const exp = Number(dbgExp.value);
+  const mod = Number(dbgMod.value);
+  if (!Number.isFinite(base) || !Number.isFinite(exp) || !Number.isFinite(mod) || mod <= 1 || exp < 0) {
+    dbgRegisters.textContent = "Некорректные параметры для mod exp.";
+    return;
+  }
+  dbgSteps = buildModExpTrace(base, exp, mod);
+  dbgIndex = 0;
+  renderDbgStep();
+}
+
+function dbgStep() {
+  if (!dbgSteps.length) dbgInit();
+  dbgIndex = Math.min(dbgIndex + 1, dbgSteps.length - 1);
+  renderDbgStep();
+}
+
+function dbgPlayPause() {
+  if (dbgTimer) {
+    clearInterval(dbgTimer);
+    dbgTimer = null;
+    return;
+  }
+  if (!dbgSteps.length) dbgInit();
+  dbgTimer = setInterval(() => {
+    if (dbgIndex >= dbgSteps.length - 1) {
+      clearInterval(dbgTimer);
+      dbgTimer = null;
+      return;
+    }
+    dbgStep();
+  }, 300);
+}
+
+function dbgReset() {
+  if (dbgTimer) {
+    clearInterval(dbgTimer);
+    dbgTimer = null;
+  }
+  dbgSteps = [];
+  dbgIndex = 0;
+  dbgRegisters.textContent = "Регистры: ожидание...";
+  dbgTrace.textContent = "Трасса: ожидание...";
 }
 
 el("shaAnimateBtn").addEventListener("click", () =>
@@ -246,5 +407,12 @@ el("tamperBtn").addEventListener("click", tamperBit);
 el("runAesBtn").addEventListener("click", () => runAes().catch((e) => (aesOutput.textContent = e.message)));
 el("runRsaEncryptBtn").addEventListener("click", () => runRsaOaep().catch((e) => (rsaEncryptOutput.textContent = e.message)));
 el("resetBtn").addEventListener("click", resetAll);
+el("diffuseInitBtn").addEventListener("click", initDiffusion);
+el("diffuseStepBtn").addEventListener("click", diffusionStep);
+el("diffuseAutoBtn").addEventListener("click", () => diffusionAuto().catch(() => {}));
+el("dbgInitBtn").addEventListener("click", dbgInit);
+el("dbgStepBtn").addEventListener("click", dbgStep);
+el("dbgPlayBtn").addEventListener("click", dbgPlayPause);
+el("dbgResetBtn").addEventListener("click", dbgReset);
 
 resetAll();
