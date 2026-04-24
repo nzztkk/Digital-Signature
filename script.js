@@ -11,6 +11,11 @@ const hashOutput = document.getElementById("hashOutput");
 const signatureOutput = document.getElementById("signatureOutput");
 const publicKeyOutput = document.getElementById("publicKeyOutput");
 const verifyStatus = document.getElementById("verifyStatus");
+const processInputOutput = document.getElementById("processInputOutput");
+const processBytesOutput = document.getElementById("processBytesOutput");
+const processHashOutput = document.getElementById("processHashOutput");
+const processSignOutput = document.getElementById("processSignOutput");
+const processVerifyOutput = document.getElementById("processVerifyOutput");
 
 const algo = {
   name: "RSA-PSS",
@@ -21,9 +26,15 @@ const algo = {
 
 let keyPair = null;
 let signatureBuffer = null;
+let signedHashHex = "";
 
 function textToArrayBuffer(text) {
   return new TextEncoder().encode(text);
+}
+
+function formatHexPreview(hex, maxLen = 160) {
+  if (hex.length <= maxLen) return hex;
+  return `${hex.slice(0, maxLen)}...`;
 }
 
 function toHex(buffer) {
@@ -70,6 +81,10 @@ async function generateKeys() {
   signatureOutput.textContent = "Подпись пока не создана";
   hashOutput.textContent = "Хеш пока не вычислен";
   signatureBuffer = null;
+  signedHashHex = "";
+  processSignOutput.textContent =
+    "Ключи готовы. Подпись еще не создана (ждем шаг «Подписать сообщение»).";
+  processVerifyOutput.textContent = "Проверка еще не запускалась.";
 
   setControls({ canSign: true, canVerify: false, canTamper: false });
   setStatus("Ключи готовы. Теперь подпиши сообщение.", "neutral");
@@ -84,6 +99,8 @@ async function signMessage() {
   const message = messageInput.value;
   const digest = await sha256(message);
   const data = textToArrayBuffer(message);
+  const dataHex = toHex(data);
+  signedHashHex = toHex(digest);
 
   signatureBuffer = await crypto.subtle.sign(
     { name: "RSA-PSS", saltLength: 32 },
@@ -93,6 +110,14 @@ async function signMessage() {
 
   hashOutput.textContent = toHex(digest);
   signatureOutput.textContent = toBase64(signatureBuffer);
+  processInputOutput.textContent = message || "(пустая строка)";
+  processBytesOutput.textContent = formatHexPreview(dataHex);
+  processHashOutput.textContent = signedHashHex;
+  processSignOutput.textContent =
+    "Подпись создана: S = Sign(privateKey, SHA-256(message)).\n\nBase64:\n" +
+    toBase64(signatureBuffer);
+  processVerifyOutput.textContent =
+    "Подпись создана. Теперь нажми «Проверить подпись», чтобы увидеть итог.";
   setControls({ canSign: true, canVerify: true, canTamper: true });
   setStatus("Подпись создана. Нажми «Проверить подпись».", "neutral");
 }
@@ -106,6 +131,7 @@ async function verifySignature() {
   const message = messageInput.value;
   const data = textToArrayBuffer(message);
   const digest = await sha256(message);
+  const currentHashHex = toHex(digest);
 
   const isValid = await crypto.subtle.verify(
     { name: "RSA-PSS", saltLength: 32 },
@@ -114,10 +140,21 @@ async function verifySignature() {
     data
   );
 
-  hashOutput.textContent = toHex(digest);
+  hashOutput.textContent = currentHashHex;
+  processInputOutput.textContent = message || "(пустая строка)";
+  processBytesOutput.textContent = formatHexPreview(toHex(data));
+  processHashOutput.textContent = currentHashHex;
   if (isValid) {
+    processVerifyOutput.textContent =
+      "Результат: VALID (подпись верна).\nТекущий хеш совпадает с подписанными данными.";
     setStatus("Подпись ВЕРНА. Сообщение не меняли.", "ok");
   } else {
+    processVerifyOutput.textContent =
+      "Результат: INVALID (подпись неверна).\nХеш при подписи: " +
+      (signedHashHex || "неизвестно") +
+      "\nХеш сейчас: " +
+      currentHashHex +
+      "\nВывод: данные изменились или подпись не от этого ключа.";
     setStatus("Подпись НЕВЕРНА. Текст изменен или подпись чужая.", "bad");
   }
 }
@@ -134,6 +171,12 @@ function resetDemo() {
   hashOutput.textContent = "Пока не вычислен";
   signatureOutput.textContent = "Пока не создана";
   publicKeyOutput.textContent = "Пока не создан";
+  processInputOutput.textContent = "Ожидание ввода сообщения...";
+  processBytesOutput.textContent = "Пока не вычислено";
+  processHashOutput.textContent = "Пока не вычислено";
+  processSignOutput.textContent = "Пока не создано";
+  processVerifyOutput.textContent = "Пока не проверено";
+  signedHashHex = "";
   setControls({ canSign: false, canVerify: false, canTamper: false });
   setStatus("Ожидание...", "neutral");
 }
@@ -168,6 +211,10 @@ tamperBtn.addEventListener("click", () => {
 
 resetBtn.addEventListener("click", () => {
   resetDemo();
+});
+
+messageInput.addEventListener("input", () => {
+  processInputOutput.textContent = messageInput.value || "(пустая строка)";
 });
 
 resetDemo();

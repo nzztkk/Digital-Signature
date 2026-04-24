@@ -86,6 +86,36 @@
         </div>
       </section>
 
+      <section class="card">
+        <h2>Процесс создания цифровой подписи (пошагово)</h2>
+        <p>
+          Введи свое сообщение выше и запускай кнопки по порядку. Здесь будет видно
+          каждый шаг процесса.
+        </p>
+        <div class="process-grid">
+          <div>
+            <h3>Шаг 1. Входные данные</h3>
+            <pre id="processInputOutput">Ожидание ввода сообщения...</pre>
+          </div>
+          <div>
+            <h3>Шаг 2. Кодирование в байты (UTF-8)</h3>
+            <pre id="processBytesOutput">Пока не вычислено</pre>
+          </div>
+          <div>
+            <h3>Шаг 3. Хеш SHA-256</h3>
+            <pre id="processHashOutput">Пока не вычислено</pre>
+          </div>
+          <div>
+            <h3>Шаг 4. Подпись приватным ключом</h3>
+            <pre id="processSignOutput">Пока не создано</pre>
+          </div>
+          <div>
+            <h3>Шаг 5. Проверка публичным ключом</h3>
+            <pre id="processVerifyOutput">Пока не проверено</pre>
+          </div>
+        </div>
+      </section>
+
       <section class="card lesson-nav">
         <a href="./lesson-5.html">← Урок 5</a>
         <a href="./index.html">На главную →</a>

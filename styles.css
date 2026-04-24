@@ -133,6 +133,12 @@ textarea {
   gap: 12px;
 }
 
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
 pre {
   margin: 0;
   background: #0b1020;
