@@ -188,6 +188,13 @@ pre {
   color: #cde1ff;
 }
 
+.hint {
+  margin-top: -6px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .table-wrap {
   overflow-x: auto;
 }

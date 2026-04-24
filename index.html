@@ -77,16 +77,20 @@
       <section class="card">
         <h2>Модуль 2. Визуализация ячеек и памяти (SHA-256)</h2>
         <label for="shaInput">Входные данные:</label>
-        <textarea id="shaInput" rows="3">Digital signatures under the hood</textarea>
+        <textarea id="shaInput" rows="3" maxlength="10000">Digital signatures under the hood</textarea>
+        <p class="hint">
+          Теоретический максимум SHA-256: до \(2^{64}-1\) бит входа (ограничение спецификации длины).
+          Практический лимит в этом демо: <strong>10 000 символов</strong> для читаемого вывода.
+        </p>
         <div class="controls">
           <button id="shaAnimateBtn">Запустить разбиение и хэширование</button>
         </div>
         <div class="process-grid">
-          <div><h3>Data Cells</h3><pre id="cellsOutput">Ожидание...</pre></div>
-          <div><h3>512-bit Blocks</h3><pre id="blocksOutput">Ожидание...</pre></div>
-          <div><h3>W[t] Schedule</h3><pre id="scheduleOutput">Ожидание...</pre></div>
-          <div><h3>Компрессия</h3><pre id="roundsOutput">Ожидание...</pre></div>
-          <div><h3>Итоговый digest</h3><pre id="digestOutput">Ожидание...</pre></div>
+          <div><h3>1) Вход и байты</h3><pre id="cellsOutput">Ожидание...</pre></div>
+          <div><h3>2) Preprocessing</h3><pre id="blocksOutput">Ожидание...</pre></div>
+          <div><h3>3) Расписание W[t]</h3><pre id="scheduleOutput">Ожидание...</pre></div>
+          <div><h3>4) Раунды компрессии</h3><pre id="roundsOutput">Ожидание...</pre></div>
+          <div><h3>5) Итоговый digest</h3><pre id="digestOutput">Ожидание...</pre></div>
         </div>
         <div class="deep-dive">
           <strong>Подробный разбор:</strong> SHA-256 выполняет preprocessing (padding + длина), затем 64-раундовую компрессию для каждого

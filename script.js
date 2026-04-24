@@ -54,6 +54,17 @@ function textToBytes(text) {
 function toHex(buffer) {
   return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
+function chunkHex(hex, chunkSize = 8, lineChunks = 4) {
+  const chunks = [];
+  for (let i = 0; i < hex.length; i += chunkSize) chunks.push(hex.slice(i, i + chunkSize));
+  const lines = [];
+  for (let i = 0; i < chunks.length; i += lineChunks) lines.push(chunks.slice(i, i + lineChunks).join(" "));
+  return lines.join("\n");
+}
+function previewText(text, max = 120) {
+  if (text.length <= max) return text;
+  return `${text.slice(0, max)}...`;
+}
 function toBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let s = "";
@@ -146,11 +157,35 @@ async function runShaModule() {
   const msg = shaInput.value;
   const d = sha256Detailed(msg);
   const native = toHex(await sha256(msg));
-  cellsOutput.textContent = `UTF-8 bytes (${d.input.length}):\n${toHex(d.input).slice(0, 256)}...`;
-  blocksOutput.textContent = `Битовая длина: ${d.bitLen}\nПосле padding: ${d.bytes.length} bytes\n512-битных блоков: ${d.blocks}`;
-  scheduleOutput.textContent = d.wPreview.join("\n");
-  roundsOutput.textContent = d.rounds.join("\n");
-  digestOutput.textContent = `manual: ${d.hashHex}\nwebcrypto: ${native}\nсовпадение: ${d.hashHex === native}`;
+  const inputHex = toHex(d.input);
+  const inputPreviewHex = inputHex.length > 256 ? `${inputHex.slice(0, 256)}...` : inputHex;
+
+  cellsOutput.textContent =
+    `Исходный текст (${msg.length} симв.):\n"${previewText(msg)}"\n\n` +
+    `UTF-8 размер: ${d.input.length} байт\n` +
+    `Первые байты (hex):\n${chunkHex(inputPreviewHex, 8, 3)}`;
+
+  blocksOutput.textContent =
+    `Битовая длина сообщения: ${d.bitLen}\n` +
+    `После padding: ${d.bytes.length} байт\n` +
+    `Количество 512-битных блоков: ${d.blocks}\n\n` +
+    `Что сделано:\n` +
+    `- Добавлен бит "1"\n` +
+    `- Добавлены нули до 448 mod 512\n` +
+    `- Добавлена исходная длина (64 бита)`;
+
+  scheduleOutput.textContent =
+    `Первые слова расписания первой порции:\n\n` +
+    d.wPreview.join("\n");
+
+  roundsOutput.textContent =
+    `Показаны контрольные раунды (первые и последние):\n\n` +
+    d.rounds.join("\n");
+
+  digestOutput.textContent =
+    `Digest (ручная реализация):\n${chunkHex(d.hashHex, 8, 4)}\n\n` +
+    `Digest (WebCrypto):\n${chunkHex(native, 8, 4)}\n\n` +
+    `Совпадение: ${d.hashHex === native ? "ДА" : "НЕТ"}`;
   addStateRow("SHA Engine", "raw bytes -> padded blocks -> digest", "none", d.hashHex);
 }
 
